@@ -110,6 +110,8 @@
     height: 10px;
 }
 .country-list{
+    height: calc(100vh - 110px);
+    overflow-y: scroll;
     margin: 16px 0;
 }
 .country-list p{

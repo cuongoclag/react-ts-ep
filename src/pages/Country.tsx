@@ -9,14 +9,20 @@ function Country() {
   const [country, setCountry] = useState<string>("")
   const [countryList, setCountryList] = useState<ICountry[]>([])
   const [loading, setLoading] = useState<boolean>(false)
-  const getCountryList = (country: string) => {
-    axios.get(`https://restcountries.com/v3.1/name/${country}`)
+  const [error, setError] = useState<boolean>(false)
+  const getCountryList = (country?: string) => {
+    axios.get(
+      country ? `https://restcountries.com/v3.1/name/${country}` : `https://restcountries.com/v3.1/all`
+    )
       .then((res) => {
         setCountryList(res.data)
         setLoading(false)
+        setError(false)
       })
       .catch((err) => {
+        setError(true)
         setCountryList([])
+        setLoading(false)
         console.log(err)
       })
   }
@@ -27,6 +33,7 @@ function Country() {
 
   useEffect(() => {
     setLoading(true)
+    setError(false)
     setCountryList([])
     const timer = setTimeout(() => {
       getCountryList(country)
@@ -44,6 +51,9 @@ function Country() {
       <div className="country-list">
         {
           loading && (<Loading />)
+        }
+        {
+          error && (<p style={{ fontWeight: '700', textAlign: 'center'}}>No data</p>)
         }
         {
           countryList.map((country, index) => {
